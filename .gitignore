@@ -27,6 +27,8 @@ migrate_working_dir/
 .env
 .env.development
 .env.production
+# Edge-function secret runbooks — keep value-free templates only, never commit real values
+supabase/*SECRETS.txt
 
 # Flutter/Dart/Pub related
 **/doc/api/
