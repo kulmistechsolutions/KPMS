@@ -341,7 +341,7 @@ class _StaffTab extends ConsumerWidget {
         return ListView.separated(
           padding: const EdgeInsets.all(PlatformAdminSpacing.md),
           itemCount: rows.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, i) {
             final r = rows[i];
             return Card(
@@ -402,7 +402,7 @@ class _RevenueTab extends StatelessWidget {
       children: [
         statsAsync.when(
           loading: () => const LinearProgressIndicator(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
           data: (s) => PlatformMetricCard(
             icon: Icons.payments_outlined,
             label: 'Sales volume (30d)',
@@ -493,7 +493,7 @@ class _SyncTab extends ConsumerWidget {
         ),
         statsAsync.when(
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
           data: (s) => Card(
             child: ListTile(
               title: const Text('Estimated load'),

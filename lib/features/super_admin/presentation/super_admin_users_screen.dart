@@ -130,7 +130,7 @@ class _SuperAdminUsersScreenState extends ConsumerState<SuperAdminUsersScreen> {
                 }
                 return ListView.separated(
                   itemCount: rows.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: PlatformAdminSpacing.sm),
+                  separatorBuilder: (_, _) => const SizedBox(height: PlatformAdminSpacing.sm),
                   itemBuilder: (context, i) {
                     final r = rows[i];
                     final tenantId = r['tenant_id']?.toString();

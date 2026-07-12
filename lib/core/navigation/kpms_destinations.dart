@@ -36,6 +36,7 @@ enum KpmsNavId {
   superSupport,
   superAnnouncements,
   superRevenue,
+  superBilling,
   superUsers,
   superApprovals,
   superAudit,
@@ -213,6 +214,12 @@ const List<KpmsDestination> kpmsPlatformDestinations = [
     route: AppRoutes.superAdminRevenue,
     navId: KpmsNavId.superRevenue,
     icon: Icons.insights_rounded,
+    zone: KpmsNavZone.platform,
+  ),
+  KpmsDestination(
+    route: AppRoutes.superAdminBilling,
+    navId: KpmsNavId.superBilling,
+    icon: Icons.payments_rounded,
     zone: KpmsNavZone.platform,
   ),
   KpmsDestination(

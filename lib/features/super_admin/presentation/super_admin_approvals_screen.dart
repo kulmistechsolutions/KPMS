@@ -45,7 +45,7 @@ class SuperAdminApprovalsScreen extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.only(bottom: PlatformAdminSpacing.xl),
             itemCount: pending.length,
-            separatorBuilder: (_, __) => const SizedBox(height: PlatformAdminSpacing.sm),
+            separatorBuilder: (_, _) => const SizedBox(height: PlatformAdminSpacing.sm),
             itemBuilder: (context, i) {
               final r = pending[i];
               final id = r['tenant_id']?.toString();

@@ -301,6 +301,7 @@ class _PharmacyDataTable extends ConsumerWidget {
           child: DataTable(
             headingRowHeight: 44,
             dataRowMinHeight: 56,
+            dataRowMaxHeight: 72,
             columnSpacing: 20,
             columns: const [
               DataColumn(label: Text('Pharmacy')),

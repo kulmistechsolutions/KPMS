@@ -156,7 +156,7 @@ class PlatformSectionHeader extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
@@ -174,8 +174,8 @@ class PlatformSkeletonList extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: count,
-      separatorBuilder: (_, __) => const SizedBox(height: PlatformAdminSpacing.sm),
-      itemBuilder: (_, __) => Card(
+      separatorBuilder: (_, _) => const SizedBox(height: PlatformAdminSpacing.sm),
+      itemBuilder: (_, _) => Card(
         child: SizedBox(
           height: 72,
           child: Padding(

@@ -61,6 +61,7 @@ import '../features/super_admin/presentation/super_admin_audit_screen.dart';
 import '../features/super_admin/presentation/super_admin_global_settings_screen.dart';
 import '../features/super_admin/presentation/super_admin_pharmacy_detail_screen.dart';
 import '../features/super_admin/presentation/super_admin_revenue_screen.dart';
+import '../features/super_admin/presentation/super_admin_billing_center_screen.dart';
 import '../features/super_admin/presentation/super_admin_users_screen.dart';
 import '../features/super_admin/presentation/super_admin_announcements_screen.dart';
 import '../features/super_admin/presentation/super_admin_dashboard_screen.dart';
@@ -556,6 +557,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.superAdminRevenue,
         name: 'superAdminRevenue',
         pageBuilder: (context, state) => kpmsSlideFadePage(state, const SuperAdminRevenueScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.superAdminBilling,
+        name: 'superAdminBilling',
+        pageBuilder: (context, state) => kpmsSlideFadePage(state, const SuperAdminBillingCenterScreen()),
       ),
       GoRoute(
         path: AppRoutes.superAdminUsers,

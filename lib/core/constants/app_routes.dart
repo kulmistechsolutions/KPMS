@@ -64,6 +64,7 @@ abstract final class AppRoutes {
 
   /// Platform SaaS modules (stubs until operator backend is wired).
   static const String superAdminRevenue = '/super-admin/revenue';
+  static const String superAdminBilling = '/super-admin/billing';
   static const String superAdminUsers = '/super-admin/users';
   static const String superAdminApprovals = '/super-admin/approvals';
   static const String superAdminAudit = '/super-admin/audit';

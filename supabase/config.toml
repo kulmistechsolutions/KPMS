@@ -401,6 +401,15 @@ verify_jwt = false
 [functions.complete-password-reset]
 verify_jwt = false
 
+[functions.waafi-init-payment]
+verify_jwt = true
+
+[functions.waafi-payment-webhook]
+verify_jwt = false
+
+[functions.billing-daily-jobs]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
