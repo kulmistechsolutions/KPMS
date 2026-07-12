@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/constants/app_routes.dart';
 import '../core/navigation/go_router_refresh.dart';
-import '../core/navigation/kpms_destinations.dart';
 import '../core/navigation/kpms_route_transitions.dart';
 import '../core/auth/kpms_permission_gate.dart';
 import '../core/supabase/auth_user_helpers.dart';
@@ -72,9 +70,6 @@ import '../features/super_admin/presentation/super_admin_monitoring_screen.dart'
 import '../features/super_admin/presentation/super_admin_support_screen.dart';
 import '../features/super_admin/presentation/super_admin_approvals_screen.dart';
 import '../features/super_admin/presentation/super_admin_sessions_screen.dart';
-import '../features/super_admin/presentation/super_admin_module_stub_screen.dart';
-import '../l10n/app_localizations.dart';
-import '../l10n/kpms_nav_l10n.dart';
 
 bool _kpmsSubscriptionRouteLocked(String loc, PharmacyOperationalStatus op) {
   final f = op.featureFlags;
@@ -94,28 +89,6 @@ bool _kpmsSubscriptionRouteLocked(String loc, PharmacyOperationalStatus op) {
   }
   if (!on('pos') && (loc.startsWith(AppRoutes.pos) || loc.startsWith(AppRoutes.checkout))) return true;
   return false;
-}
-
-CustomTransitionPage<void> _superAdminStubPage(
-  GoRouterState state, {
-  required KpmsNavId navId,
-  required IconData icon,
-  required String body,
-}) {
-  return kpmsSlideFadePage(
-    state,
-    Builder(
-      builder: (context) {
-        final l = AppLocalizations.of(context);
-        return SuperAdminModuleStubScreen(
-          title: navId.title(l),
-          subtitle: navId.subtitle(l),
-          icon: icon,
-          body: body,
-        );
-      },
-    ),
-  );
 }
 
 const _publicPaths = <String>{

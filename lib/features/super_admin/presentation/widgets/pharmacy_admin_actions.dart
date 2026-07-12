@@ -58,7 +58,7 @@ abstract final class PharmacyAdminActions {
             license: license.text.trim(),
             ownerName: owner.text.trim(),
           );
-      _invalidate(context, ref, tenantId);
+      _invalidate(ref, tenantId);
       if (!context.mounted) return;
       kpmsSnack(context, 'Pharmacy updated.');
     } catch (e) {
@@ -132,7 +132,7 @@ abstract final class PharmacyAdminActions {
       ].join(' · ');
       await ref.read(platformAdminRepositoryProvider).suspendPharmacy(tenantId, detail.isEmpty ? null : detail);
       if (!context.mounted) return;
-      _invalidate(context, ref, tenantId);
+      _invalidate(ref, tenantId);
       kpmsSnack(context, 'Pharmacy suspended.');
     } catch (e) {
       if (!context.mounted) return;
@@ -156,7 +156,7 @@ abstract final class PharmacyAdminActions {
     try {
       await ref.read(platformAdminRepositoryProvider).reactivatePharmacy(tenantId);
       if (!context.mounted) return;
-      _invalidate(context, ref, tenantId);
+      _invalidate(ref, tenantId);
       kpmsSnack(context, 'Pharmacy activated.');
     } catch (e) {
       if (!context.mounted) return;
@@ -259,7 +259,7 @@ abstract final class PharmacyAdminActions {
     context.push(AppRoutes.superAdminAnnouncements);
   }
 
-  static void _invalidate(BuildContext context, WidgetRef ref, String tenantId) {
+  static void _invalidate(WidgetRef ref, String tenantId) {
     ref.invalidate(superAdminPharmacyDetailProvider(tenantId));
     ref.invalidate(superAdminPharmaciesProvider);
     ref.invalidate(superAdminPharmacyStatsProvider(tenantId));

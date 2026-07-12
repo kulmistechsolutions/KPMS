@@ -68,6 +68,8 @@ class StaffDeviceSessionsScreen extends ConsumerWidget {
   }
 }
 
-final myDeviceSessionsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+// autoDispose: screen-scoped. Frees the list on exit and re-fetches fresh session
+// data on re-entry (an active-device-sessions list should never serve a stale cache).
+final myDeviceSessionsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   return ref.watch(staffRepositoryProvider).listMyDeviceSessions();
 });

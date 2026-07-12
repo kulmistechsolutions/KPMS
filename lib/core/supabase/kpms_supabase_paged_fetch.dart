@@ -1,3 +1,4 @@
+import '../constants/app_constants.dart';
 import '../performance/kpms_performance_log.dart';
 import 'supabase_bootstrap.dart';
 
@@ -28,7 +29,8 @@ abstract final class KpmsSupabasePagedFetch {
           .select()
           .eq('tenant_id', tid)
           .order(orderColumn, ascending: true)
-          .range(from, from + pageSize - 1);
+          .range(from, from + pageSize - 1)
+          .timeout(AppConstants.workspacePullPageTimeout);
 
       final list = raw as List<dynamic>;
       if (list.isEmpty) break;
@@ -69,7 +71,8 @@ abstract final class KpmsSupabasePagedFetch {
           .eq('tenant_id', tid)
           .gte(orderColumn, sinceIso)
           .order(orderColumn, ascending: true)
-          .range(from, from + pageSize - 1);
+          .range(from, from + pageSize - 1)
+          .timeout(AppConstants.workspacePullPageTimeout);
 
       final list = raw as List<dynamic>;
       if (list.isEmpty) break;

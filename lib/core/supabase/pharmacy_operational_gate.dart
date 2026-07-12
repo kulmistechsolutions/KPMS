@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../constants/app_constants.dart';
 import '../constants/app_prefs_keys.dart';
 
 /// Cached result of [get_my_pharmacy_operational_status] for GoRouter (suspension, expiry, maintenance).
@@ -98,7 +99,9 @@ class PharmacyOperationalGate {
       return _status!;
     }
     try {
-      final raw = await client.rpc('get_my_pharmacy_operational_status');
+      final raw = await client
+          .rpc('get_my_pharmacy_operational_status')
+          .timeout(AppConstants.authGateNetworkTimeout);
       var parsed = PharmacyOperationalStatus.fromRpc(raw);
 
       final epoch = parsed.forceLogoutEpoch;

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../auth/kpms_permission_gate.dart';
+import '../constants/app_constants.dart';
 import '../monitoring/kpms_auth_health_metrics.dart';
 import '../observability/kpms_auth_diagnostics.dart';
 import '../persistence/kpms_persistence_log.dart';
@@ -136,7 +137,7 @@ class ProfileTenantGate {
 
     try {
       try {
-        await client.rpc('ensure_my_profile');
+        await client.rpc('ensure_my_profile').timeout(AppConstants.authGateNetworkTimeout);
         KpmsAuthDiagnostics.log('tenant_restore', {'stage': 'ensure_my_profile_ok', 'user': _shortId(userId)});
       } catch (e) {
         KpmsAuthDiagnostics.log('tenant_restore', {'stage': 'ensure_my_profile_skip', 'err': '$e'});
@@ -160,7 +161,8 @@ class ProfileTenantGate {
             .from('profiles')
             .select('tenant_id, role, full_name')
             .eq('id', userId)
-            .maybeSingle();
+            .maybeSingle()
+            .timeout(AppConstants.authGateNetworkTimeout);
 
         lastRow = row;
         if (row != null) {
@@ -310,7 +312,9 @@ class ProfileTenantGate {
 
   static Future<(bool, Map<String, dynamic>)?> _tryTenantViaPermissionProfileRpc(SupabaseClient client) async {
     try {
-      final raw = await client.rpc('kpms_my_permission_profile');
+      final raw = await client
+          .rpc('kpms_my_permission_profile')
+          .timeout(AppConstants.authGateNetworkTimeout);
       if (raw == null || raw is! Map) return null;
       final m = Map<String, dynamic>.from(raw);
       final tid = m['tenant_id'];
@@ -325,7 +329,9 @@ class ProfileTenantGate {
 
   static Future<String?> _tryTenantViaAuthProfileTenantIdRpc(SupabaseClient client) async {
     try {
-      final raw = await client.rpc('kpms_auth_profile_tenant_id');
+      final raw = await client
+          .rpc('kpms_auth_profile_tenant_id')
+          .timeout(AppConstants.authGateNetworkTimeout);
       if (raw == null) return null;
       final s = '$raw'.trim();
       return s.isEmpty ? null : s;

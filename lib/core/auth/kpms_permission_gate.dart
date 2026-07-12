@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../constants/app_constants.dart';
 import 'kpms_permission_context.dart';
 import 'kpms_permission_revoke_sync.dart';
 
@@ -28,12 +29,14 @@ class KpmsPermissionGate {
     }
 
     try {
-      await client.rpc('ensure_my_profile');
+      await client.rpc('ensure_my_profile').timeout(AppConstants.authGateNetworkTimeout);
     } catch (_) {}
 
     Map<String, dynamic>? row;
     try {
-      final raw = await client.rpc('kpms_my_permission_profile');
+      final raw = await client
+          .rpc('kpms_my_permission_profile')
+          .timeout(AppConstants.authGateNetworkTimeout);
       if (raw != null && raw is Map) {
         final m = Map<String, dynamic>.from(raw);
         final r = m['role'];
@@ -50,7 +53,8 @@ class KpmsPermissionGate {
           .from('profiles')
           .select('role, tenant_id, permissions, staff_status, permission_revoke_nonce, must_change_password')
           .eq('id', userId)
-          .maybeSingle();
+          .maybeSingle()
+          .timeout(AppConstants.authGateNetworkTimeout);
       _context = KpmsPermissionContext.fromProfileRow(row);
       _userId = userId;
       await KpmsPermissionRevokeSync.applyAfterResolve(userId, _context!);

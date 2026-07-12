@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:excel/excel.dart';
+// hide: deferred imports must hide all extensions; these two String helpers are
+// internal to the excel package and unused here.
+import 'package:excel/excel.dart' deferred as xlsx hide BoolParsing, StringExt;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' deferred as pdf;
+import 'package:pdf/widgets.dart' deferred as pw;
 import 'package:share_plus/share_plus.dart';
 
 import '../../../core/branding/invoice_logo_bytes.dart';
@@ -69,8 +71,11 @@ abstract final class ReportExportService {
     String? logoUrl,
     String? tenantId,
   }) async {
+    // Deferred: pull the pdf code split on first export instead of at web startup.
+    await pdf.loadLibrary();
+    await pw.loadLibrary();
     final doc = pw.Document();
-    pw.MemoryImage? logoImg;
+    dynamic logoImg; // deferred pw.MemoryImage — dynamic avoids a deferred type annotation.
     final logoBytes = await fetchInvoiceLogoBytes(logoUrl);
     if (logoBytes != null && logoBytes.isNotEmpty) {
       try {
@@ -81,8 +86,8 @@ abstract final class ReportExportService {
 
     doc.addPage(
       pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(32),
+        pageFormat: pdf.PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(32),
         build: (ctx) => [
           pw.Header(
             level: 0,
@@ -97,12 +102,12 @@ abstract final class ReportExportService {
                   pw.Text(pharmacy, style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                   pw.SizedBox(height: 2),
                 ],
-                pw.Text(AppConstants.appFullName, style: pw.TextStyle(fontSize: 9, color: PdfColors.grey700)),
+                pw.Text(AppConstants.appFullName, style: pw.TextStyle(fontSize: 9, color: pdf.PdfColors.grey700)),
                 pw.SizedBox(height: 4),
                 pw.Text(d.reportId.title, style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 6),
-                pw.Text('Period: ${d.rangeLabel}', style: const pw.TextStyle(fontSize: 10)),
-                pw.Text('Filters: ${d.filterFootnote}', style: const pw.TextStyle(fontSize: 9)),
+                pw.Text('Period: ${d.rangeLabel}', style: pw.TextStyle(fontSize: 10)),
+                pw.Text('Filters: ${d.filterFootnote}', style: pw.TextStyle(fontSize: 9)),
               ],
             ),
           ),
@@ -114,18 +119,18 @@ abstract final class ReportExportService {
               for (final m in d.summaries)
                 pw.Container(
                   width: 160,
-                  padding: const pw.EdgeInsets.all(10),
+                  padding: pw.EdgeInsets.all(10),
                   decoration: pw.BoxDecoration(
-                    border: pw.Border.all(color: PdfColors.grey300),
-                    borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                    border: pw.Border.all(color: pdf.PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.all(pw.Radius.circular(8)),
                   ),
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text(m.label, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                      pw.Text(m.label, style: pw.TextStyle(fontSize: 8, color: pdf.PdfColors.grey700)),
                       pw.Text(m.value, style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                       if (m.deltaLabel != null)
-                        pw.Text(m.deltaLabel!, style: pw.TextStyle(fontSize: 7, color: PdfColors.grey600)),
+                        pw.Text(m.deltaLabel!, style: pw.TextStyle(fontSize: 7, color: pdf.PdfColors.grey600)),
                     ],
                   ),
                 ),
@@ -138,10 +143,10 @@ abstract final class ReportExportService {
             headers: d.tableColumns,
             data: d.tableRows,
             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
-            cellStyle: const pw.TextStyle(fontSize: 8),
-            headerDecoration: const pw.BoxDecoration(color: PdfColors.grey200),
+            cellStyle: pw.TextStyle(fontSize: 8),
+            headerDecoration: pw.BoxDecoration(color: pdf.PdfColors.grey200),
             cellAlignment: pw.Alignment.centerLeft,
-            cellPadding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            cellPadding: pw.EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             border: null,
           ),
           for (final sec in d.extraSections) ...[
@@ -149,16 +154,16 @@ abstract final class ReportExportService {
             pw.Text(sec.title, style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 6),
             if (sec.rows.isEmpty)
-              pw.Text('No rows', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600))
+              pw.Text('No rows', style: pw.TextStyle(fontSize: 8, color: pdf.PdfColors.grey600))
             else
               pw.TableHelper.fromTextArray(
                 headers: sec.columns,
                 data: sec.rows,
                 headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
-                cellStyle: const pw.TextStyle(fontSize: 8),
-                headerDecoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                cellStyle: pw.TextStyle(fontSize: 8),
+                headerDecoration: pw.BoxDecoration(color: pdf.PdfColors.grey200),
                 cellAlignment: pw.Alignment.centerLeft,
-                cellPadding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                cellPadding: pw.EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                 border: null,
               ),
           ],
@@ -166,7 +171,7 @@ abstract final class ReportExportService {
           pw.Center(
             child: pw.Text(
               '${AppConstants.appName} · Confidential pharmacy analytics',
-              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
+              style: pw.TextStyle(fontSize: 8, color: pdf.PdfColors.grey500),
             ),
           ),
         ],
@@ -183,36 +188,37 @@ abstract final class ReportExportService {
   }
 
   static Future<void> exportExcel(ReportDataset d, {String? tenantId}) async {
-    final excel = Excel.createExcel();
+    await xlsx.loadLibrary();
+    final excel = xlsx.Excel.createExcel();
     final sheetName = excel.getDefaultSheet() ?? excel.tables.keys.first;
     final sheet = excel[sheetName];
 
-    sheet.appendRow([TextCellValue(AppConstants.appFullName)]);
-    sheet.appendRow([TextCellValue(d.reportId.title)]);
-    sheet.appendRow([TextCellValue('Period: ${d.rangeLabel}')]);
-    sheet.appendRow([TextCellValue('Filters: ${d.filterFootnote}')]);
+    sheet.appendRow([xlsx.TextCellValue(AppConstants.appFullName)]);
+    sheet.appendRow([xlsx.TextCellValue(d.reportId.title)]);
+    sheet.appendRow([xlsx.TextCellValue('Period: ${d.rangeLabel}')]);
+    sheet.appendRow([xlsx.TextCellValue('Filters: ${d.filterFootnote}')]);
     sheet.appendRow([]);
 
     for (final m in d.summaries) {
       sheet.appendRow([
-        TextCellValue(m.label),
-        TextCellValue(m.value),
-        if (m.deltaLabel != null) TextCellValue(m.deltaLabel!),
+        xlsx.TextCellValue(m.label),
+        xlsx.TextCellValue(m.value),
+        if (m.deltaLabel != null) xlsx.TextCellValue(m.deltaLabel!),
       ]);
     }
     sheet.appendRow([]);
 
-    sheet.appendRow([for (final c in d.tableColumns) TextCellValue(c)]);
+    sheet.appendRow([for (final c in d.tableColumns) xlsx.TextCellValue(c)]);
     for (final row in d.tableRows) {
-      sheet.appendRow([for (final c in row) TextCellValue(c)]);
+      sheet.appendRow([for (final c in row) xlsx.TextCellValue(c)]);
     }
 
     for (final sec in d.extraSections) {
       sheet.appendRow([]);
-      sheet.appendRow([TextCellValue(sec.title)]);
-      sheet.appendRow([for (final c in sec.columns) TextCellValue(c)]);
+      sheet.appendRow([xlsx.TextCellValue(sec.title)]);
+      sheet.appendRow([for (final c in sec.columns) xlsx.TextCellValue(c)]);
       for (final row in sec.rows) {
-        sheet.appendRow([for (final c in row) TextCellValue(c)]);
+        sheet.appendRow([for (final c in row) xlsx.TextCellValue(c)]);
       }
     }
 
