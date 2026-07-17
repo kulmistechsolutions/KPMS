@@ -176,6 +176,7 @@ class _MedicineCsvImportDialogState extends ConsumerState<_MedicineCsvImportDial
                     border: OutlineInputBorder(),
                     hintText: 'Medicine Name,Batch Number,Expiry Date,Quantity,Buying Price,Selling Price,Min Stock Level',
                   ),
+                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 8),
                 Row(
