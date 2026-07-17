@@ -20,6 +20,7 @@ import '../application/medicine_catalog_stats.dart';
 import '../data/medicine_catalog_notifier.dart';
 import '../domain/medicine.dart';
 import '../domain/medicine_type_style.dart';
+import 'widgets/medicine_csv_import_dialog.dart';
 import 'widgets/medicine_manage_actions.dart';
 
 /// Medicine catalog — uses shared [medicineCatalogProvider] (swap backend later).
@@ -197,6 +198,12 @@ class _MedicinesScreenState extends ConsumerState<MedicinesScreen> {
       title: 'Medicines',
       subtitle: 'Catalog · pricing · batches · expiry',
       actions: [
+        if (canManage)
+          IconButton(
+            tooltip: 'Import CSV',
+            onPressed: () => showMedicineCsvImportDialog(context, ref),
+            icon: const Icon(Icons.upload_file_outlined),
+          ),
         IconButton(
           tooltip: 'Categories',
           onPressed: () => context.push(AppRoutes.medicineCategories),

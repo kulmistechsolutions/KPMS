@@ -61,6 +61,8 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   web: any
   intl: any
+  file_picker: ">=12.0.0-beta.7 <13.0.0"
+  csv: ^8.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

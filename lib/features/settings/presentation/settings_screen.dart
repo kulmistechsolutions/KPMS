@@ -13,6 +13,8 @@ import '../../../core/constants/app_routes.dart';
 import '../../../core/settings/kpms_settings_log.dart';
 import '../../../core/errors/kpms_user_facing_error.dart';
 import '../../../core/navigation/kpms_breakpoints.dart';
+import '../../../core/security/kpms_app_lock_controller.dart';
+import '../../../core/security/kpms_app_lock_setup.dart';
 import '../../../core/utils/kpms_feedback.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/kpms_change_password_dialog.dart';
@@ -498,7 +500,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       leading: Icon(Icons.pin_outlined, color: theme.colorScheme.primary),
                       title: Text(l.settingsOptionalPinTitle),
                       subtitle: Text(l.settingsOptionalPinSubtitle),
-                      onTap: () => kpmsSnack(context, l.settingsOptionalPinSubtitle),
+                      trailing: Text(
+                        ref.watch(kpmsAppLockProvider.select((s) => s.hasPin))
+                            ? l.appLockStatusOn
+                            : l.appLockStatusOff,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      onTap: () => showKpmsAppLockManager(context, ref),
                     ),
                   ],
                 ),

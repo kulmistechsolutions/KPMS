@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/security/kpms_app_lock_gate.dart';
 import 'core/supabase/supabase_bootstrap.dart';
 import 'core/supabase/supabase_config_required_app.dart';
 import 'core/theme/app_theme.dart';
@@ -42,14 +43,16 @@ class KpmsApp extends ConsumerWidget {
       themeMode: themeMode,
       routerConfig: router,
       builder: (context, child) {
-        return PharmacyTenantIsolationHost(
-          child: KpmsStaffSessionBootstrapHost(
-            child: PharmacyWorkspaceBootstrapHost(
-              child: KpmsAuthRecoveryHost(
-                child: PharmacyWorkspaceRealtimeHost(
-                  child: KpmsOperationalNotificationsHost(
-                    child: KpmsPushMessagingHost(
-                      child: PharmacyWorkspaceAutoSaveHost(child: child ?? const SizedBox.shrink()),
+        return KpmsAppLockGate(
+          child: PharmacyTenantIsolationHost(
+            child: KpmsStaffSessionBootstrapHost(
+              child: PharmacyWorkspaceBootstrapHost(
+                child: KpmsAuthRecoveryHost(
+                  child: PharmacyWorkspaceRealtimeHost(
+                    child: KpmsOperationalNotificationsHost(
+                      child: KpmsPushMessagingHost(
+                        child: PharmacyWorkspaceAutoSaveHost(child: child ?? const SizedBox.shrink()),
+                      ),
                     ),
                   ),
                 ),

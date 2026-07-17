@@ -62,6 +62,13 @@ class MedicineCatalogNotifier extends StateNotifier<List<Medicine>> {
     state = [m, ...state];
   }
 
+  /// Bulk insert (e.g. CSV import) — single state update for the whole batch.
+  void addMany(List<Medicine> meds) {
+    if (meds.isEmpty) return;
+    _invalidateIdCache();
+    state = [...meds, ...state];
+  }
+
   void updateMedicine(Medicine m) {
     _invalidateIdCache();
     state = [
