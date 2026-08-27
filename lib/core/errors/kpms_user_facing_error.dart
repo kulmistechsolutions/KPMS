@@ -150,6 +150,18 @@ String _postgresStyleMessage(Object error) {
 }
 
 String _authExceptionMessage(AuthException e) {
+  // gotrue wraps network/CORS/DNS failures and 5xx responses in AuthRetryableFetchException.
+  // Its message embeds the request URI, so _looksTechnical would mask the real cause below.
+  if (e is AuthRetryableFetchException) {
+    if (e.statusCode == null) {
+      return 'Unable to connect. Check your internet connection and try again.';
+    }
+    return 'The service is temporarily unavailable. Please try again in a moment.';
+  }
+  // Unexpected/undecodable response body — message is technical but has no keyword match.
+  if (e is AuthUnknownException) {
+    return 'Sign-in could not be completed. Please try again.';
+  }
   final m = e.message.trim();
   final lower = m.toLowerCase();
   if (lower.contains('invalid login') || lower.contains('invalid credentials')) {
